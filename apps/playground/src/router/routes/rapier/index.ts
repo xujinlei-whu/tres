@@ -1,5 +1,10 @@
 export const rapierRoutes = [
   {
+    path: '/rapier/physics',
+    name: 'Physics',
+    component: () => import('@/pages/rapier/PhysicsDemo.vue'),
+  },
+  {
     path: '/rapier/rigid-body',
     name: 'Rigid Body',
     component: () => import('@/pages/rapier/RigidBody.vue'),
@@ -25,15 +30,14 @@ export const rapierRoutes = [
     component: () => import('@/pages/rapier/ApplyingForcesDemo.vue'),
   },
   {
-    path: '/rapier/gravity',
-    name: 'Gravity',
-    component: () => import('@/pages/rapier/GravityDemo.vue'),
-  },
-
-  {
     path: '/rapier/collision',
     name: 'Collision',
     component: () => import('@/pages/rapier/CollisionDemo.vue'),
+  },
+  {
+    path: '/rapier/contact-force',
+    name: 'Contact Force',
+    component: () => import('@/pages/rapier/ContactForceDemo.vue'),
   },
   {
     path: '/rapier/sensor',
@@ -56,8 +60,28 @@ export const rapierRoutes = [
     component: () => import('@/pages/rapier/ExposeDemo.vue'),
   },
   {
+    path: '/rapier/collision-groups',
+    name: 'Collision Groups',
+    component: () => import('@/pages/rapier/CollisionGroupsDemo.vue'),
+  },
+  {
+    path: '/rapier/solver-groups',
+    name: 'Solver Groups',
+    component: () => import('@/pages/rapier/SolverGroupsDemo.vue'),
+  },
+  {
+    path: '/rapier/heightfield',
+    name: 'Heightfield',
+    component: () => import('@/pages/rapier/HeightfieldDemo.vue'),
+  },
+  {
     path: '/rapier/ragdoll',
     name: 'Basic Ragdoll',
     component: () => import('@/pages/rapier/RagdollDemo.vue'),
+  },
+  {
+    path: '/rapier/generated-level',
+    name: 'Generated Level (tres gltf --physics)',
+    component: () => import('@/pages/rapier/GeneratedLevel.vue'),
   },
 ]

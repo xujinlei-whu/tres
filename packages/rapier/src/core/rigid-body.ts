@@ -1,11 +1,79 @@
-import { type RigidBody, RigidBodyDesc } from '@dimforge/rapier3d-compat'
+import { RigidBodyDesc } from '@dimforge/rapier3d-compat'
+import type { RigidBody } from '@dimforge/rapier3d-compat'
 
 import type {
+  ColliderProps,
+  ColliderShape,
   CreateRigidBodyDescProps,
   CreateRigidBodyProps,
   CreateRigidBodyReturnType,
+  RigidBodyCollidersShape,
   RigidBodyUserData,
 } from '../types'
+import { BufferGeometry, IcosahedronGeometry, Mesh, SphereGeometry } from 'three'
+import { mergeVertices } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
+import type { TresObject3D } from '@tresjs/core'
+import { getColliderSizingsFromObject, toColliderIndices } from '../utils'
+
+/**
+ * @description
+ */
+export const createRigidBodyAutoColliderArgs: (props: {
+  rigidBody: RigidBody
+  shape: RigidBodyCollidersShape
+  object: TresObject3D
+}) => any[] = (props) => {
+  const { object, shape } = props
+  const geometry = object?.geometry?.clone()
+  const sizes = getColliderSizingsFromObject(object as TresObject3D)
+  const halfWidth = (sizes.halfWidth)
+  const halfHeight = (sizes.halfHeight)
+  const halfDepth = (sizes.halfDepth)
+  const radius = (sizes.radius)
+
+  let args: any[] = [
+    halfWidth,
+    halfHeight,
+    halfDepth,
+  ]
+
+  if (
+    shape === 'ball'
+    || (shape === undefined
+      && object instanceof Mesh
+      && (geometry instanceof SphereGeometry
+        || geometry instanceof IcosahedronGeometry))
+  ) {
+    args = [radius ?? 1]
+  }
+  else if (shape === 'capsule') {
+    // rapier measures a capsule's half-height across its cylindrical section alone, and adds a
+    // hemisphere of `radius` at each end. A bounding half-height passed straight through is
+    // therefore a collider two radii taller than the mesh it was read from.
+    const capRadius = Math.max(halfWidth, halfDepth)
+    args = [Math.max(halfHeight - capRadius, 0), capRadius]
+  }
+  else if (shape === 'cone' || shape === 'cylinder') {
+    args = [halfHeight, halfWidth]
+  }
+  else if (geometry instanceof BufferGeometry) {
+    if (shape === 'trimesh') {
+      const clonedGeometry = mergeVertices(geometry)
+      const triMeshMap = clonedGeometry.attributes.position
+        .array as Float32Array
+      const triMeshUnit = toColliderIndices(clonedGeometry.index?.array)
+
+      args = [triMeshMap, triMeshUnit]
+    }
+    else if (shape === 'convexHull') {
+      const triMeshMap = mergeVertices(geometry).attributes.position.array as Float32Array
+
+      args = [triMeshMap]
+    }
+  }
+
+  return args
+}
 
 /**
  * @description Create a {@link RigidBodyDesc} based on the given
@@ -41,6 +109,34 @@ export const createRigidBodyDesc = (props: CreateRigidBodyDescProps) => {
   } satisfies RigidBodyUserData
 
   return rigidBodyDesc
+}
+
+/**
+ * @description Create {@link ColliderProps} based on the received object and shape.
+ *
+ * @param object {@link TresObject3D}
+ * @param shape {@link RigidBodyCollidersShape}
+ * @param rigidBody {@link RigidBody}
+ */
+export const createRigidBodyAutoColliderPropsFromObject = (
+  object: TresObject3D,
+  shape: RigidBodyCollidersShape,
+  rigidBody: RigidBody,
+): ColliderProps => {
+  const { position, quaternion, scale } = object
+
+  return {
+    shape: shape as ColliderShape,
+    object,
+    args: createRigidBodyAutoColliderArgs({
+      rigidBody,
+      shape,
+      object,
+    }),
+    position: [position.x, position.y, position.z],
+    rotation: [quaternion.x, quaternion.y, quaternion.z, quaternion.w],
+    scale: [scale.x ?? 1, scale.y ?? 1, scale.z ?? 1],
+  }
 }
 
 /**

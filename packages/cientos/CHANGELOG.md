@@ -1,3 +1,117 @@
+## 5.9.0 (2026-09-14)
+
+### 🚀 Features
+
+- **cli:** batch repeated meshes with --instance and --instanceall ([#1472](https://github.com/Tresjs/tres/pull/1472))
+- **cientos:** add Instances and Merged abstractions ([#1468](https://github.com/Tresjs/tres/pull/1468))
+- **cli:** tres gltf, glTF to Vue SFC codegen ([#1464](https://github.com/Tresjs/tres/pull/1464))
+- MeshPortalMaterial (MVP) + TresPortal ([#1445](https://github.com/Tresjs/tres/pull/1445))
+- **cientos:** small addition to the keyboardControls with the Q key you can go down and with the E key you can go up (assuming Y+up) ([#1449](https://github.com/Tresjs/tres/pull/1449))
+- **cientos:** Refractor component ([#1422](https://github.com/Tresjs/tres/pull/1422))
+- **cientos:** add RoundedPlane shape ([aefa2613](https://github.com/Tresjs/tres/commit/aefa2613))
+
+### 🩹 Fixes
+
+- **useProgress:** reset loading progress based on already loaded items and  unified loading screen for experiments ([bd532edb](https://github.com/Tresjs/tres/commit/bd532edb))
+- **cientos:** reactivity for randomness and count ([#1448](https://github.com/Tresjs/tres/pull/1448))
+- **cientos:** strip scene.environment during AccumulativeShadows bake ([#1446](https://github.com/Tresjs/tres/pull/1446))
+
+### 🧱 Updated Dependencies
+
+- Updated @tresjs/core to 5.9.0
+
+### ❤️ Thank You
+
+- Alvaro Saburido @alvarosabu
+- alvarosabu @alvarosabu
+- Claude Opus 4.8
+- Jaime A Torrealba C @JaimeTorrealba
+
+## 5.8.1 (2026-06-18)
+
+### 🧱 Updated Dependencies
+
+- Updated @tresjs/core to 5.8.3
+
+## 5.8.0 (2026-06-18)
+
+### 🚀 Features
+
+- **cientos:** add MeshTransmissionMaterial ([#1436](https://github.com/Tresjs/tres/pull/1436))
+- **cientos:** add quality prop to serve 2k/4k preset HDRs ([#1418](https://github.com/Tresjs/tres/issues/1418))
+
+### 🩹 Fixes
+
+- **cientos:** closes #1407 - Fix the demo img (on playground), - Fix reactivity for the url prop - Improve the docs demo ([#1407](https://github.com/Tresjs/tres/issues/1407))
+- **PointerLockControls:** refactor event listeners logic ([fff6fb31](https://github.com/Tresjs/tres/commit/fff6fb31))
+
+### 🧱 Updated Dependencies
+
+- Updated @tresjs/core to 5.8.2
+
+### ❤️ Thank You
+
+- Alfarish Fizikri
+- Alvaro Saburido @alvarosabu
+- alvarosabu @alvarosabu
+- Claude Opus 4.8
+- Jaime Torrealba
+
+## 5.7.2 (2026-05-28)
+
+### 🚀 Features
+
+- **cientos:** layer-hover edges + edgeColor prop on <Decal> ([54cc9649](https://github.com/Tresjs/tres/commit/54cc9649))
+- **cientos:** mirror DecalDebugUI layer hover to 3D edges ([25cad672](https://github.com/Tresjs/tres/commit/25cad672))
+- **cientos-docs:** enhance Decal component with improved mesh targeting and layout management ([5b28fb05](https://github.com/Tresjs/tres/commit/5b28fb05))
+- **cientos:** add <Decal> abstraction with interactive editor UI ([248a807b](https://github.com/Tresjs/tres/commit/248a807b))
+- **cientos:** continue experimental improvements and refine component testing ([a2a01531](https://github.com/Tresjs/tres/commit/a2a01531))
+- **cientos:** continue experimental improvements and refine component testing ([d0605d70](https://github.com/Tresjs/tres/commit/d0605d70))
+- **cientos:** continue experimental work and refine component behavior during testing ([fe39293e](https://github.com/Tresjs/tres/commit/fe39293e))
+- **cientos:** extend test component with texture support, zIndex handling, and import/export ([97152383](https://github.com/Tresjs/tres/commit/97152383))
+- **cientos:** initial test implementation of the new component with debug setup ([cf2aa5d9](https://github.com/Tresjs/tres/commit/cf2aa5d9))
+
+### 🩹 Fixes
+
+- **cientos:** cancel decal edit when handle is released off-mesh ([81333f03](https://github.com/Tresjs/tres/commit/81333f03))
+- **cientos:** correct click event handling during testing phase ([a661ce06](https://github.com/Tresjs/tres/commit/a661ce06))
+
+### ❤️ Thank You
+
+- alvarosabu @alvarosabu
+- Damien Montastier @damienmontastier
+
+## 5.7.1 (2026-05-11)
+
+### 🩹 Fixes
+
+- **cientos:** get StatsGl container from its `dom` property ([545ba8b2](https://github.com/Tresjs/tres/commit/545ba8b2))
+
+### 🧱 Updated Dependencies
+
+- Updated @tresjs/core to 5.8.1
+- Updated @tresjs/eslint-config to 1.6.0
+
+### ❤️ Thank You
+
+- AntoninRousset
+
+## 5.7.0 (2026-03-30)
+
+### 🩹 Fixes
+
+- **cientos:** ContactShadows not rendering after Three.js r183 ([#32805](https://github.com/Tresjs/tres/issues/32805), [#1392](https://github.com/Tresjs/tres/issues/1392))
+- Add function to extract color and texture from user defaults in Lensflare ([acaece00](https://github.com/Tresjs/tres/commit/acaece00))
+
+### 🧱 Updated Dependencies
+
+- Updated @tresjs/core to 5.8.0
+
+### ❤️ Thank You
+
+- alvarosabu @alvarosabu
+- Claude Opus 4.6 (1M context)
+
 ## 5.6.0 (2026-03-10)
 
 ### 🚀 Features

@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { OrbitControls } from '@tresjs/cientos'
 import { TresCanvas } from '@tresjs/core'
-import { type ExposedRigidBody, Physics, RigidBody, SphericalJoint } from '@tresjs/rapier'
+import { Physics, RigidBody, SphericalJoint } from '@tresjs/rapier'
+import type { ExposedRigidBody } from '@tresjs/rapier'
 import { ACESFilmicToneMapping, Quaternion, SRGBColorSpace } from 'three'
 import { onMounted, onUnmounted, shallowRef } from 'vue'
 import type { ShallowRef } from 'vue'
@@ -18,7 +19,7 @@ const yRotation = shallowRef(0)
 const bodyRefs = shallowRef<ShallowRef[]>(
   Array.from({ length: 10 }).map(() => shallowRef<ExposedRigidBody>()),
 )
-const currentInterval = shallowRef<number | undefined>(undefined)
+const currentInterval = shallowRef<number | NodeJS.Timeout | undefined>(undefined)
 
 onMounted(() => {
   currentInterval.value = setInterval(() => {

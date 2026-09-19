@@ -1,12 +1,17 @@
 <script lang="ts" setup>
-import { type TresObject3D, useLoop } from '@tresjs/core'
+import { useLoop } from '@tresjs/core'
+import type { TresObject3D } from '@tresjs/core'
 import { InstancedMesh, Object3D } from 'three'
 import { onUnmounted, onUpdated, shallowRef, watch } from 'vue'
 
 import { useRapierContext } from '../composables'
 import { MATRIX_ZERO, QUATERNION_ZERO, VECTOR_ZERO } from '../constants/'
-import { createCollider, createRigidBody } from '../core'
-import type { InstancedRigidBodyProps, RigidBodyContext, TresInstancedMesh } from '../types'
+import { createCollider, createRigidBody, createRigidBodyAutoColliderPropsFromObject } from '../core'
+import type {
+  InstancedRigidBodyProps,
+  RigidBodyContext,
+  TresInstancedMesh,
+} from '../types'
 
 const props = withDefaults(defineProps<Partial<InstancedRigidBodyProps>>(), {
   type: 'dynamic',
@@ -21,6 +26,7 @@ const bodiesContexts = shallowRef<RigidBodyContext[]>([])
 
 defineExpose({
   contexts: bodiesContexts,
+  group: bodyGroup,
 })
 
 watch(bodyGroup, (group) => {
@@ -59,10 +65,14 @@ watch(bodyGroup, (group) => {
     rigidBodyInfo.rigidBody.setTranslation(position, true)
     rigidBodyInfo.rigidBody.setRotation(quaternion, true)
 
+    const colliderProps = createRigidBodyAutoColliderPropsFromObject(
+      object,
+      props.collider,
+      rigidBodyInfo.rigidBody,
+    )
     const colliderInfo = {
       ...createCollider({
-        object,
-        shape: props.collider,
+        ...colliderProps,
         rigidBody: rigidBodyInfo.rigidBody,
         world,
       }),

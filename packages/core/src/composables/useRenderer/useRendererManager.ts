@@ -7,8 +7,9 @@ import {
   unrefElement,
   useTimeout,
 } from '@vueuse/core'
-import { Material, Mesh, WebGLRenderer } from 'three'
-import { computed, type MaybeRef, type MaybeRefOrGetter, nextTick, onUnmounted, type Reactive, ref, type ShallowRef, toValue, watch, watchEffect } from 'vue'
+import { Material, Mesh, PCFShadowMap, PCFSoftShadowMap, WebGLRenderer } from 'three'
+import { computed, nextTick, onUnmounted, ref, toValue, watch, watchEffect } from 'vue'
+import type { MaybeRef, MaybeRefOrGetter, Reactive, ShallowRef } from 'vue'
 import type { Renderer } from 'three/webgpu'
 
 // Solution taken from Thretle that actually support different versions https://github.com/threlte/threlte/blob/5fa541179460f0dadc7dc17ae5e6854d1689379e/packages/core/src/lib/lib/useRenderer.ts
@@ -18,7 +19,7 @@ import { logWarning } from '../../utils/logger'
 import type { SizesType } from '../useSizes'
 import type { UseCameraReturn } from '../useCamera'
 import type { TresScene } from '../../types'
-import { isFunction, isObject } from '../../utils/is'
+import { isFunction, isWebGPURenderer } from '../../utils/is'
 import { useCreateRafLoop } from '../useCreateRafLoop'
 import { TresRendererError } from '../../utils/error'
 
@@ -144,10 +145,10 @@ export interface RendererOptions {
    * Type of shadow map to use for shadow calculations
    * - `BasicShadowMap`: Basic shadow map.
    * - `PCFShadowMap`: Percentage-Closer Filtering shadow map.
-   * - `PCFSoftShadowMap`: Percentage-Closer Filtering soft shadow map.
+   * - `PCFSoftShadowMap`: Deprecated on WebGL, three falls back to `PCFShadowMap`. Still supported on WebGPU.
    * - `VSMShadowMap`: Variance shadow map.
    * @see {@link https://threejs.org/docs/#api/en/constants/Renderer}
-   * @default PCFSoftShadowMap (Opinionated default by TresJS)
+   * @default PCFShadowMap on WebGL, PCFSoftShadowMap on WebGPU (Opinionated default by TresJS)
    */
   shadowMapType?: ShadowMapType
   /**
@@ -268,10 +269,6 @@ export function useRendererManager(
 
   const isModeAlways = computed(() => toValue(options.renderMode) === 'always')
 
-  // be aware that the WebGLRenderer does not extend from Renderer
-  const isRenderer = (value: unknown): value is Renderer =>
-    isObject(value) && 'isRenderer' in value && Boolean(value.isRenderer)
-
   const readyEventHook = createEventHook<TresRenderer>()
   const errorEventHook = createEventHook<TresRendererError>()
   let hasTriggeredReady = false
@@ -283,7 +280,7 @@ export function useRendererManager(
   // Initialize renderer asynchronously (required for WebGPU in Three.js r181+)
   const initializeRenderer = async () => {
     try {
-      if (isRenderer(renderer)) {
+      if (isWebGPURenderer(renderer)) {
         // WebGPU renderer requires awaiting init() before any operations
         await renderer.init()
       }
@@ -461,9 +458,10 @@ export function useRendererManager(
 
   watchEffect(() => {
     if (!isInitialized.value) { return }
-    const value = options.shadowMapType
-    if (value === undefined) { return }
-    renderer.shadowMap.type = value
+    // `PCFSoftShadowMap` is deprecated on WebGL (three warns and falls back to `PCFShadowMap`),
+    // but it is still a real, softer filter on WebGPU. Keep the soft default only where it works.
+    const fallback = isWebGPURenderer(renderer) ? PCFSoftShadowMap : PCFShadowMap
+    renderer.shadowMap.type = options.shadowMapType ?? fallback
     forceMaterialUpdate()
   })
 

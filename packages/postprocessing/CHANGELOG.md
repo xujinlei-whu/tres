@@ -1,3 +1,41 @@
+## 3.8.0 (2026-09-14)
+
+### 🧱 Updated Dependencies
+
+- Updated @tresjs/core to 5.9.0
+
+## 3.7.4 (2026-06-18)
+
+### 🧱 Updated Dependencies
+
+- Updated @tresjs/core to 5.8.3
+
+## 3.7.3 (2026-06-18)
+
+### 🧱 Updated Dependencies
+
+- Updated @tresjs/core to 5.8.2
+
+## 3.7.2 (2026-05-11)
+
+### 🧱 Updated Dependencies
+
+- Updated @tresjs/core to 5.8.1
+- Updated @tresjs/eslint-config to 1.6.0
+- Updated @tresjs/leches to 1.2.1
+
+## 3.7.1 (2026-04-02)
+
+### 🧱 Updated Dependencies
+
+- Updated @tresjs/leches to 1.2.0
+
+## 3.7.0 (2026-03-30)
+
+### 🧱 Updated Dependencies
+
+- Updated @tresjs/core to 5.8.0
+
 ## 3.6.0 (2026-03-10)
 
 ### 🧱 Updated Dependencies

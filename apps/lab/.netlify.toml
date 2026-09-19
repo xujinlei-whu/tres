@@ -1,5 +1,5 @@
 [build]
-command = "pnpm install && pnpm nx run tresjs-lab:generate"
+command = "pnpm install && pnpm nx run lab:generate"
 publish = "apps/lab/dist"
 
 [build.environment]
@@ -7,6 +7,6 @@ COREPACK_INTEGRITY_KEYS = "0"
 NODE_VERSION = "22"
 
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+from = "/*"
+to = "/index.html"
+status = 200

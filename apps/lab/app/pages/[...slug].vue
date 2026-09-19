@@ -8,8 +8,7 @@ const { data: page } = await useAsyncData(route.path, () => {
 })
 
 const { data: authors } = await useAsyncData('authors', () =>
-  queryCollection('authors').all()
-)
+  queryCollection('authors').all())
 
 const formattedPage = computed(() => {
   return {
@@ -18,8 +17,15 @@ const formattedPage = computed(() => {
   }
 })
 
+// Social crawlers require an absolute og:image URL, so resolve the thumbnail against the canonical origin.
+const { siteUrl } = useRuntimeConfig().public
+const ogImage = computed(() => {
+  const path = page.value?.thumbnail ?? `/experiments/${route.path.split('/').pop()}.webp`
+  return new URL(path, siteUrl).href
+})
+
 useHead({
-  title: `${page?.value?.title}`,
+  title: () => page.value?.title,
   meta: [
     {
       hid: 'description',
@@ -40,7 +46,7 @@ useHead({
     {
       hid: 'og:title',
       property: 'og:title',
-      content: `${page?.value?.title} made with TresJS by @${page?.value?.author}`,
+      content: () => page.value?.title ? `${page.value.title} made with TresJS by @${page.value.author}` : 'TresJS Lab',
     },
     {
       hid: 'og:type',
@@ -50,7 +56,7 @@ useHead({
     {
       hid: 'og:image',
       property: 'og:image',
-      content: page?.value?.thumbnail ?? `/${page?.value?._path?.split('/').pop()}.png`,
+      content: () => ogImage.value,
     },
     {
       hid: 'og:image:alt',
@@ -63,7 +69,7 @@ useHead({
     {
       hid: 'twitter:title',
       property: 'twitter:title',
-      content: `${page?.value?.title} - Tres`,
+      content: () => page.value?.title ? `${page.value.title} - Tres` : 'TresJS Lab',
     },
     {
       hid: 'twitter:description',
@@ -73,7 +79,7 @@ useHead({
     {
       hid: 'twitter:image',
       name: 'twitter:image',
-      content: page?.value?.thumbnail ?? `/${page?.value?._path?.split('/').pop()}.png`,
+      content: () => ogImage.value,
     },
     {
       hid: 'twitter:image:alt',
@@ -84,7 +90,7 @@ useHead({
 })
 
 function toPascalCase(str: string) {
-  return str.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase()).replace(/^[a-z]/, (letter) => letter.toUpperCase())
+  return str.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase()).replace(/^[a-z]/, letter => letter.toUpperCase())
 }
 
 const component = computed(() => toPascalCase(page.value?.stem.split('/').pop() ?? ''))
